@@ -1,0 +1,8 @@
+customtkinter>=5.2.2
+textual>=0.47.0
+typer>=0.12.0
+rich>=13.7.0
+psutil>=5.9.8
+send2trash>=1.8.3
+pywin32>=306
+Pillow>=10.0.0

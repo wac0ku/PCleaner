@@ -1,0 +1,56 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg
+*.egg-info/
+dist/
+build/
+.eggs/
+*.spec
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# PyInstaller
+*.spec
+dist/
+build/
+
+# App data (local config/logs)
+*.log
+config.json
+
+# Windows
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+
+# Backups created by PCleaner
+backups/
+*.reg
+
+# Claude Code / Claude-flow dev infrastructure (not for end users)
+.claude/
+.claude-flow/
+
+# MCP server config (may contain local paths / tokens)
+.mcp.json
+
+# Empty artifact files
+None

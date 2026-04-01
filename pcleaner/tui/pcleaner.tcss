@@ -1,0 +1,218 @@
+/* PCleaner TUI stylesheet */
+
+Screen {
+    background: $surface;
+}
+
+Header {
+    background: $accent;
+    color: $text;
+    text-style: bold;
+}
+
+Footer {
+    background: $surface-darken-1;
+}
+
+/* ── Sidebar ── */
+#sidebar {
+    width: 22;
+    background: $surface-darken-2;
+    border-right: solid $accent;
+    padding: 1 0;
+}
+
+.sidebar-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: $text-muted;
+    text-align: left;
+    padding: 0 2;
+    height: 3;
+}
+
+.sidebar-btn:hover {
+    background: $surface-darken-1;
+    color: $text;
+}
+
+.sidebar-btn.-active {
+    background: $accent 30%;
+    color: $accent;
+    text-style: bold;
+}
+
+/* ── Main content ── */
+#content {
+    padding: 1 2;
+}
+
+/* ── Tables ── */
+DataTable {
+    border: solid $accent;
+    background: $surface-darken-1;
+    height: 1fr;
+}
+
+DataTable > .datatable--header {
+    background: $accent 20%;
+    color: $accent;
+    text-style: bold;
+}
+
+DataTable > .datatable--cursor {
+    background: $accent 40%;
+}
+
+/* ── Progress ── */
+ProgressBar {
+    margin: 1 0;
+}
+
+ProgressBar > .bar--bar {
+    color: $accent;
+}
+
+ProgressBar > .bar--complete {
+    color: $success;
+}
+
+/* ── Panels / Labels ── */
+.panel-title {
+    color: $accent;
+    text-style: bold;
+    margin-bottom: 1;
+}
+
+.stat-label {
+    color: $text-muted;
+}
+
+.stat-value {
+    color: $text;
+    text-style: bold;
+}
+
+.size-value {
+    color: $warning;
+    text-style: bold;
+}
+
+.success-text {
+    color: $success;
+    text-style: bold;
+}
+
+.warning-text {
+    color: $warning;
+}
+
+.error-text {
+    color: $error;
+}
+
+/* ── Summary sidebar ── */
+#summary-panel {
+    width: 30;
+    background: $surface-darken-2;
+    border-left: solid $accent;
+    padding: 1 2;
+}
+
+.summary-row {
+    margin-bottom: 1;
+}
+
+/* ── Log widget ── */
+RichLog {
+    border: solid $accent;
+    background: $surface-darken-2;
+    height: 10;
+    margin-top: 1;
+}
+
+/* ── Buttons ── */
+Button {
+    margin: 0 1;
+}
+
+Button.-primary {
+    background: $accent;
+    color: $background;
+}
+
+Button.-warning {
+    background: $warning;
+    color: $background;
+}
+
+Button.-error {
+    background: $error;
+    color: $background;
+}
+
+#button-row {
+    height: 3;
+    margin-top: 1;
+    align: left middle;
+}
+
+/* ── Modal ── */
+ModalScreen {
+    align: center middle;
+}
+
+#modal-dialog {
+    background: $surface;
+    border: double $accent;
+    padding: 2 4;
+    width: 60;
+    height: auto;
+}
+
+#modal-title {
+    text-style: bold;
+    color: $accent;
+    margin-bottom: 1;
+}
+
+#modal-buttons {
+    align: center middle;
+    margin-top: 2;
+}
+
+/* ── Health screen ── */
+.health-card {
+    background: $surface-darken-1;
+    border: solid $accent;
+    padding: 1 2;
+    margin: 0 1 1 0;
+    height: auto;
+}
+
+.health-card-title {
+    color: $accent;
+    text-style: bold;
+}
+
+/* ── Tabs ── */
+TabbedContent {
+    height: 1fr;
+}
+
+TabPane {
+    padding: 1 2;
+}
+
+/* ── Input ── */
+Input {
+    border: solid $accent;
+    background: $surface-darken-1;
+    margin-bottom: 1;
+}
+
+/* ── Scrollable ── */
+ScrollableContainer {
+    height: 1fr;
+}
