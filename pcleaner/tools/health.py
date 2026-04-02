@@ -27,7 +27,7 @@ class DriveInfo:
         for unit in ("B", "KB", "MB", "GB", "TB"):
             if n < 1024:
                 return f"{n:.1f} {unit}"
-            n //= 1024
+            n /= 1024
         return f"{n} TB"
 
     @property
@@ -85,7 +85,7 @@ class HealthReport:
         for unit in ("B", "KB", "MB", "GB"):
             if n < 1024:
                 return f"{n:.1f} {unit}"
-            n //= 1024
+            n /= 1024
         return f"{n} GB"
 
     @property

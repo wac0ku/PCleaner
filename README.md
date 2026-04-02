@@ -6,6 +6,85 @@
 
 A fully-featured, open-source replacement for CCleaner Pro — available as a modern **GUI**, a professional **TUI**, and a scriptable **CLI**, all from one install.
 
+> **PCleaner is a 100% free, open-source replacement for CCleaner Pro.** No ads. No nag screens. No telemetry. All Pro features — completely free.
+
+---
+
+## ⚡ Quick Install
+
+### One-click (recommended)
+
+Double-click **`install.bat`** — the Installation Wizard will:
+
+1. Check your Python installation
+2. Create a virtual environment
+3. Install all dependencies
+4. Build a standalone `PCleaner.exe`
+5. Create Desktop + Start Menu shortcuts
+6. Optionally launch PCleaner immediately
+
+### PowerShell
+
+```powershell
+.\install.ps1                  # Full interactive install
+.\install.ps1 -SkipBuild       # Skip .exe build (run from source)
+.\install.ps1 -SkipShortcut    # Skip shortcuts
+.\install.ps1 -Silent          # Non-interactive install
+```
+
+### Manual (from source)
+
+```bash
+git clone https://github.com/wac0ku/PCleaner.git
+cd PCleaner
+pip install -e .
+```
+
+---
+
+## 🚀 Usage
+
+**PCleaner launches as a desktop GUI app by default.** Just double-click the shortcut or run:
+
+```
+pcleaner
+```
+
+### Interfaces
+
+| Interface | Launch | Description |
+|-----------|--------|-------------|
+| **GUI** (default) | `pcleaner` or `pcleaner --gui` | Modern desktop window with dark/light theme, sidebar navigation, real-time progress |
+| **TUI** | `pcleaner --tui` | Full-featured terminal UI with sidebar navigation, dashboard, keyboard shortcuts |
+| **CLI** | `pcleaner --cli` or `pcleaner clean` | Scriptable commands with Rich output for automation |
+
+### GUI (CustomTkinter) — Default
+
+A modern desktop window with dark/light theme toggle, sidebar navigation, and real-time progress bars. Launches automatically when you run `pcleaner` without arguments.
+
+### TUI (Textual)
+
+A professional terminal UI with:
+- **Sidebar navigation** — 8 screens accessible via mouse, F1–F8, or number keys 1–8
+- **System Dashboard** — Live CPU/RAM/swap gauges, drive usage bars, system info cards
+- **Quick Actions** — DNS flush, clipboard clear from the sidebar
+- **Modern dark theme** — GitHub-inspired color palette with cyan accents
+
+```
+pcleaner --tui
+```
+
+### CLI (Typer + Rich)
+
+Scriptable commands with beautiful Rich output. CLI subcommands are auto-detected:
+
+```
+pcleaner clean          # Runs CLI clean directly
+pcleaner health         # Runs CLI health report
+pcleaner --cli          # Explicit CLI mode
+pcleaner --help         # Show all commands
+```
+
 ---
 
 ## Features
@@ -26,58 +105,14 @@ A fully-featured, open-source replacement for CCleaner Pro — available as a mo
 
 ---
 
-## Interfaces
-
-### GUI (CustomTkinter)
-A modern desktop window with dark/light theme toggle, sidebar navigation, and real-time progress bars.
-
-```
-pcleaner --gui
-```
-
-### TUI (Textual)
-A full-featured terminal UI with tabbed navigation, sortable data tables, and modal confirmation dialogs.
-
-```
-pcleaner --tui
-```
-
-### CLI (Typer + Rich)
-Scriptable commands with beautiful Rich output, suitable for automation and scheduled tasks.
-
-```
-pcleaner --help
-```
-
----
-
-## Installation
-
-### Requirements
-- Windows 10 / 11
-- Python 3.10 or newer
-
-### From source
-
-```bash
-git clone https://github.com/yourname/pcleaner.git
-cd pcleaner
-pip install -e .
-```
-
-### From PyPI *(coming soon)*
-
-```bash
-pip install pcleaner
-```
-
----
-
 ## CLI Reference
 
 ```bash
-# Show banner + quick-start hints
-pcleaner
+# Launch interfaces
+pcleaner                               # GUI (default)
+pcleaner --tui                         # TUI
+pcleaner --cli                         # CLI mode
+pcleaner --version                     # Show version
 
 # Scan and clean junk files
 pcleaner clean                         # Interactive — asks for confirmation
@@ -110,11 +145,6 @@ pcleaner startup enable  "OneDrive"
 # Disk usage
 pcleaner disk analyze C:\Users\YourName
 pcleaner disk analyze D:\ --top 20
-
-# Launch interfaces
-pcleaner --gui
-pcleaner --tui
-pcleaner --version
 ```
 
 ---
@@ -127,6 +157,22 @@ pcleaner --version
 | 3 | DoD 5220.22-M | Standard secure deletion |
 | 7 | DoD 5220.22-M ECE | High-security environments |
 | 35 | Gutmann | Maximum theoretical security |
+
+---
+
+## TUI Keyboard Shortcuts
+
+| Key | Action |
+|-----|--------|
+| `F1` / `1` | Dashboard |
+| `F2` / `2` | Cleaner |
+| `F3` / `3` | Registry |
+| `F4` / `4` | Startup Manager |
+| `F5` / `5` | Uninstaller |
+| `F6` / `6` | Disk Analyzer |
+| `F7` / `7` | Duplicate Finder |
+| `F8` / `8` | System Health |
+| `q` | Quit |
 
 ---
 
@@ -149,32 +195,45 @@ pcleaner clean
 ## Project Structure
 
 ```
-pcleaner/
-├── core/
-│   ├── scanner.py       — Parallel file scanner (ThreadPoolExecutor)
-│   ├── cleaner.py       — Deletion engine with progress callbacks
-│   ├── registry.py      — Registry scan + backup + clean
-│   ├── browsers.py      — Browser profile path definitions
-│   └── wiper.py         — Secure multi-pass file overwrite
-├── tools/
-│   ├── startup.py       — Startup entry manager
-│   ├── uninstaller.py   — Installed software lister + uninstaller
-│   ├── disk_analyzer.py — Disk usage by file type
-│   ├── duplicates.py    — Hash-based duplicate finder
-│   └── health.py        — System health report
-├── gui/                 — CustomTkinter desktop app
-├── tui/                 — Textual terminal app
-├── cli/                 — Typer CLI commands
-└── utils/
-    ├── config.py        — JSON config in %APPDATA%\PCleaner\
-    ├── logger.py        — Rotating file logger
-    ├── elevation.py     — UAC admin check + re-launch
-    └── security.py      — Path sanitization, input validation, safe subprocess
-tests/
-├── test_scanner.py
-├── test_registry.py
-├── test_tools.py
-└── test_security.py
+PCleaner/
+├── install.bat              — One-click installer (double-click)
+├── install.ps1              — PowerShell installation wizard
+├── pcleaner/
+│   ├── __main__.py          — Entry point (GUI default, CLI auto-detect)
+│   ├── core/
+│   │   ├── scanner.py       — Parallel file scanner (ThreadPoolExecutor)
+│   │   ├── cleaner.py       — Deletion engine with progress callbacks
+│   │   ├── registry.py      — Registry scan + backup + clean
+│   │   ├── browsers.py      — Browser profile path definitions
+│   │   └── wiper.py         — Secure multi-pass file overwrite
+│   ├── tools/
+│   │   ├── startup.py       — Startup entry manager
+│   │   ├── uninstaller.py   — Installed software lister + uninstaller
+│   │   ├── disk_analyzer.py — Disk usage by file type
+│   │   ├── duplicates.py    — Hash-based duplicate finder
+│   │   └── health.py        — System health report
+│   ├── gui/                 — CustomTkinter desktop app
+│   ├── tui/
+│   │   ├── app.py           — Sidebar navigation + screen switching
+│   │   ├── pcleaner.tcss    — Dark theme stylesheet
+│   │   └── screens/
+│   │       ├── dashboard.py — System health dashboard with gauges
+│   │       ├── cleaner.py   — Junk file scanner/cleaner
+│   │       ├── registry.py  — Registry cleaner
+│   │       ├── startup.py   — Startup manager with search
+│   │       ├── uninstaller.py — Software uninstaller
+│   │       ├── disk.py      — Disk usage analyzer
+│   │       ├── duplicates.py — Duplicate file finder
+│   │       └── health.py    — Detailed health report
+│   ├── cli/                 — Typer CLI commands
+│   └── utils/
+│       ├── config.py        — JSON config in %APPDATA%\PCleaner\
+│       ├── logger.py        — Rotating file logger
+│       ├── elevation.py     — UAC admin check + re-launch
+│       └── security.py      — Path sanitization, input validation
+├── tests/
+├── pyproject.toml
+└── requirements.txt
 ```
 
 ---

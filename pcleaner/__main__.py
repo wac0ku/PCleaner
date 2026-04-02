@@ -1,9 +1,10 @@
 """Entry point dispatcher for PCleaner.
 
 Usage:
-    python -m pcleaner          -> CLI (Typer)
+    python -m pcleaner          -> GUI (default desktop app)
     python -m pcleaner --tui    -> TUI (Textual)
-    python -m pcleaner --gui    -> GUI (CustomTkinter)
+    python -m pcleaner --cli    -> CLI (Typer)
+    python -m pcleaner clean    -> CLI subcommand (auto-detected)
 """
 
 from __future__ import annotations
@@ -24,10 +25,19 @@ def launch_tui() -> None:
     PCleanerTUI().run()
 
 
+# CLI subcommands that should route to the Typer CLI
+_CLI_COMMANDS = {
+    "clean", "health", "wipe", "duplicates",
+    "registry", "startup", "disk",
+    "--help", "-h", "--version", "-V",
+}
+
+
 def main() -> None:
-    """Main entry point — dispatches to GUI, TUI, or CLI."""
+    """Main entry point — defaults to GUI, CLI only when explicitly requested."""
     args = sys.argv[1:]
 
+    # Explicit interface flags
     if "--gui" in args:
         sys.argv.remove("--gui")
         launch_gui()
@@ -38,9 +48,20 @@ def main() -> None:
         launch_tui()
         return
 
-    # Default: Typer CLI
-    from pcleaner.cli.commands import app as cli_app
-    cli_app()
+    if "--cli" in args:
+        sys.argv.remove("--cli")
+        from pcleaner.cli.commands import app as cli_app
+        cli_app()
+        return
+
+    # Auto-detect CLI subcommands (so `pcleaner clean` still works)
+    if args and args[0] in _CLI_COMMANDS:
+        from pcleaner.cli.commands import app as cli_app
+        cli_app()
+        return
+
+    # Default: launch GUI (desktop app)
+    launch_gui()
 
 
 if __name__ == "__main__":

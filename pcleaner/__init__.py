@@ -10,6 +10,8 @@ __license__ = "MIT"
 APP_NAME = "PCleaner"
 APP_SUBTITLE = "the free Cleaner App"
 APP_FULL_NAME = f"{APP_NAME} - {APP_SUBTITLE}"
+APP_TAGLINE  = "100% Free  •  Open Source  •  CCleaner Pro — for free"
+APP_GITHUB   = "https://github.com/wac0ku/PCleaner"
 
 BANNER = r"""
  /$$$$$$$   /$$$$$$  /$$

@@ -36,15 +36,18 @@ pcleaner-gui = "pcleaner.__main__:launch_gui"
 pcleaner-tui = "pcleaner.__main__:launch_tui"
 
 [project.urls]
-Homepage   = "https://github.com/pcleaner/pcleaner"
-Repository = "https://github.com/pcleaner/pcleaner"
-Issues     = "https://github.com/pcleaner/pcleaner/issues"
+Homepage   = "https://github.com/wac0ku/PCleaner"
+Repository = "https://github.com/wac0ku/PCleaner"
+Issues     = "https://github.com/wac0ku/PCleaner/issues"
 
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0",
     "psutil>=5.9.8",
     "ruff>=0.4.0",
+]
+notebooklm = [
+    "notebooklm-py>=0.3.4",
 ]
 
 [tool.setuptools.packages.find]

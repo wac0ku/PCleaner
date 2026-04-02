@@ -1,218 +1,469 @@
-/* PCleaner TUI stylesheet */
+/* ═══════════════════════════════════════════════════════════════════════
+   PCleaner TUI — Modern Dark Theme Stylesheet
+   ═══════════════════════════════════════════════════════════════════════ */
+
+/* ── Base ── */
 
 Screen {
-    background: $surface;
+    background: #0d1117;
 }
 
 Header {
-    background: $accent;
-    color: $text;
+    background: #161b22;
+    color: #c9d1d9;
     text-style: bold;
+    dock: top;
 }
 
 Footer {
-    background: $surface-darken-1;
+    background: #161b22;
+    color: #8b949e;
 }
 
-/* ── Sidebar ── */
+/* ── Top Banner ── */
+
+#top-banner {
+    height: 1;
+    background: #1a3a4a;
+    color: #c9d1d9;
+    text-align: center;
+    padding: 0 2;
+    dock: top;
+}
+
+/* ═════════════════════════════════════════════════════
+   Sidebar
+   ═════════════════════════════════════════════════════ */
+
+#main-layout {
+    height: 1fr;
+}
+
 #sidebar {
-    width: 22;
-    background: $surface-darken-2;
-    border-right: solid $accent;
-    padding: 1 0;
+    width: 28;
+    background: #0d1117;
+    border-right: solid #30363d;
+    height: 1fr;
+}
+
+#sidebar-logo {
+    height: 3;
+    padding: 0 1;
+    color: #58a6ff;
+    text-style: bold;
+}
+
+.sidebar-divider {
+    height: 1;
+    color: #30363d;
+    margin: 0 0 0 0;
+}
+
+.sidebar-spacer {
+    height: 1fr;
 }
 
 .sidebar-btn {
     width: 100%;
     background: transparent;
     border: none;
-    color: $text-muted;
+    color: #8b949e;
     text-align: left;
-    padding: 0 2;
+    padding: 0 1;
     height: 3;
+    min-width: 26;
 }
 
 .sidebar-btn:hover {
-    background: $surface-darken-1;
-    color: $text;
+    background: #161b22;
+    color: #c9d1d9;
+}
+
+.sidebar-btn:focus {
+    background: #161b22;
+    color: #c9d1d9;
 }
 
 .sidebar-btn.-active {
-    background: $accent 30%;
-    color: $accent;
+    background: #1a3a4a;
+    color: #58a6ff;
     text-style: bold;
+    border-left: tall #58a6ff;
 }
 
-/* ── Main content ── */
-#content {
-    padding: 1 2;
+.sidebar-quick-btn {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #8b949e;
+    text-align: left;
+    padding: 0 1;
+    height: 2;
+    min-width: 26;
 }
 
-/* ── Tables ── */
-DataTable {
-    border: solid $accent;
-    background: $surface-darken-1;
+.sidebar-quick-btn:hover {
+    background: #161b22;
+    color: #f0883e;
+}
+
+.sidebar-quick-btn:focus {
+    background: #161b22;
+    color: #f0883e;
+}
+
+.admin-badge {
+    height: 1;
+    padding: 0 1;
+    margin-top: 1;
+}
+
+#sidebar-footer {
+    height: 3;
+    padding: 0 1;
+    color: #3fb950;
+}
+
+/* ═════════════════════════════════════════════════════
+   Content Area
+   ═════════════════════════════════════════════════════ */
+
+#content-area {
+    background: #0d1117;
+    padding: 0 0;
     height: 1fr;
 }
 
+/* ── Screen titles ── */
+
+.screen-title {
+    color: #58a6ff;
+    text-style: bold;
+    height: 2;
+    padding: 0 1;
+    margin-bottom: 0;
+}
+
+.screen-subtitle {
+    color: #8b949e;
+    height: 1;
+    padding: 0 1;
+    margin-bottom: 1;
+}
+
+/* ═════════════════════════════════════════════════════
+   Action Bars & Status
+   ═════════════════════════════════════════════════════ */
+
+.action-bar {
+    height: 3;
+    margin: 0 1;
+    align: left middle;
+}
+
+.status-row {
+    height: 1;
+    margin: 0 1;
+    align: left middle;
+}
+
+.status-label {
+    color: #8b949e;
+    min-width: 40;
+}
+
+.size-badge {
+    color: #f0883e;
+    text-style: bold;
+}
+
+.count-badge {
+    color: #8b949e;
+    text-style: italic;
+}
+
+/* ═════════════════════════════════════════════════════
+   Data Tables
+   ═════════════════════════════════════════════════════ */
+
+DataTable {
+    border: solid #30363d;
+    background: #0d1117;
+    height: 1fr;
+    margin: 0 1;
+}
+
 DataTable > .datatable--header {
-    background: $accent 20%;
-    color: $accent;
+    background: #161b22;
+    color: #58a6ff;
     text-style: bold;
 }
 
 DataTable > .datatable--cursor {
-    background: $accent 40%;
+    background: #1a3a4a;
+    color: #c9d1d9;
 }
 
-/* ── Progress ── */
+DataTable > .datatable--even-row {
+    background: #0d1117;
+}
+
+DataTable > .datatable--odd-row {
+    background: #111920;
+}
+
+/* ═════════════════════════════════════════════════════
+   Progress Bars
+   ═════════════════════════════════════════════════════ */
+
 ProgressBar {
-    margin: 1 0;
+    margin: 0 1;
+    height: 1;
 }
 
 ProgressBar > .bar--bar {
-    color: $accent;
+    color: #58a6ff;
 }
 
 ProgressBar > .bar--complete {
-    color: $success;
+    color: #3fb950;
 }
 
-/* ── Panels / Labels ── */
-.panel-title {
-    color: $accent;
-    text-style: bold;
-    margin-bottom: 1;
-}
+/* ═════════════════════════════════════════════════════
+   Buttons
+   ═════════════════════════════════════════════════════ */
 
-.stat-label {
-    color: $text-muted;
-}
-
-.stat-value {
-    color: $text;
-    text-style: bold;
-}
-
-.size-value {
-    color: $warning;
-    text-style: bold;
-}
-
-.success-text {
-    color: $success;
-    text-style: bold;
-}
-
-.warning-text {
-    color: $warning;
-}
-
-.error-text {
-    color: $error;
-}
-
-/* ── Summary sidebar ── */
-#summary-panel {
-    width: 30;
-    background: $surface-darken-2;
-    border-left: solid $accent;
-    padding: 1 2;
-}
-
-.summary-row {
-    margin-bottom: 1;
-}
-
-/* ── Log widget ── */
-RichLog {
-    border: solid $accent;
-    background: $surface-darken-2;
-    height: 10;
-    margin-top: 1;
-}
-
-/* ── Buttons ── */
 Button {
-    margin: 0 1;
+    margin: 0 1 0 0;
+    min-width: 14;
+    background: #21262d;
+    color: #c9d1d9;
+    border: tall #30363d;
+}
+
+Button:hover {
+    background: #30363d;
+    color: #ffffff;
+}
+
+Button:focus {
+    background: #30363d;
+    color: #ffffff;
+    border: tall #58a6ff;
 }
 
 Button.-primary {
-    background: $accent;
-    color: $background;
+    background: #1f6feb;
+    color: #ffffff;
+    border: tall #388bfd;
+}
+
+Button.-primary:hover {
+    background: #388bfd;
 }
 
 Button.-warning {
-    background: $warning;
-    color: $background;
+    background: #9e6a03;
+    color: #ffffff;
+    border: tall #d29922;
+}
+
+Button.-warning:hover {
+    background: #d29922;
 }
 
 Button.-error {
-    background: $error;
-    color: $background;
+    background: #da3633;
+    color: #ffffff;
+    border: tall #f85149;
 }
 
-#button-row {
+Button.-error:hover {
+    background: #f85149;
+}
+
+/* ═════════════════════════════════════════════════════
+   Input Fields
+   ═════════════════════════════════════════════════════ */
+
+Input {
+    border: solid #30363d;
+    background: #0d1117;
+    color: #c9d1d9;
+    margin: 0 1 1 1;
     height: 3;
-    margin-top: 1;
-    align: left middle;
 }
 
-/* ── Modal ── */
+Input:focus {
+    border: solid #58a6ff;
+}
+
+Input > .input--placeholder {
+    color: #484f58;
+}
+
+/* ═════════════════════════════════════════════════════
+   Log Panel
+   ═════════════════════════════════════════════════════ */
+
+.log-container {
+    height: 8;
+    margin: 0 1;
+}
+
+RichLog {
+    border: solid #30363d;
+    background: #0d1117;
+    height: 1fr;
+    padding: 0 1;
+    scrollbar-color: #30363d;
+    scrollbar-color-active: #58a6ff;
+    scrollbar-color-hover: #484f58;
+}
+
+/* ═════════════════════════════════════════════════════
+   Modal Dialog
+   ═════════════════════════════════════════════════════ */
+
 ModalScreen {
     align: center middle;
+    background: rgba(0, 0, 0, 0.75);
 }
 
 #modal-dialog {
-    background: $surface;
-    border: double $accent;
-    padding: 2 4;
-    width: 60;
+    background: #161b22;
+    border: double #58a6ff;
+    padding: 1 2;
+    width: 56;
     height: auto;
+    max-height: 16;
 }
 
 #modal-title {
+    height: 2;
+    color: #58a6ff;
     text-style: bold;
-    color: $accent;
-    margin-bottom: 1;
+}
+
+#modal-body {
+    color: #c9d1d9;
+    height: auto;
 }
 
 #modal-buttons {
     align: center middle;
-    margin-top: 2;
+    margin-top: 1;
+    height: 3;
 }
 
-/* ── Health screen ── */
-.health-card {
-    background: $surface-darken-1;
-    border: solid $accent;
-    padding: 1 2;
-    margin: 0 1 1 0;
+/* ═════════════════════════════════════════════════════
+   Dashboard-specific
+   ═════════════════════════════════════════════════════ */
+
+.gauge-row {
     height: auto;
+    max-height: 5;
+    padding: 0 1;
 }
 
-.health-card-title {
-    color: $accent;
-    text-style: bold;
+.gauge-column {
+    width: 1fr;
 }
 
-/* ── Tabs ── */
-TabbedContent {
-    height: 1fr;
+GaugeBar {
+    height: 1;
+    color: #c9d1d9;
 }
 
-TabPane {
-    padding: 1 2;
-}
-
-/* ── Input ── */
-Input {
-    border: solid $accent;
-    background: $surface-darken-1;
+.drive-row {
+    height: auto;
+    max-height: 8;
+    padding: 0 1;
     margin-bottom: 1;
 }
 
-/* ── Scrollable ── */
+.info-grid {
+    height: auto;
+    max-height: 8;
+    padding: 0 1;
+    grid-size: 3 2;
+    grid-gutter: 1;
+}
+
+.info-card {
+    background: #161b22;
+    border: solid #30363d;
+    padding: 0 1;
+    height: 3;
+    color: #c9d1d9;
+}
+
+.info-line {
+    height: 1;
+    color: #c9d1d9;
+}
+
+.quick-scan-card {
+    background: #161b22;
+    border: solid #30363d;
+    padding: 1 1;
+    margin: 0 1;
+    height: auto;
+    max-height: 12;
+    color: #c9d1d9;
+}
+
+.dash-button-row {
+    height: 3;
+    margin: 1 1;
+    align: left middle;
+}
+
+/* ═════════════════════════════════════════════════════
+   Health-specific
+   ═════════════════════════════════════════════════════ */
+
+.health-card {
+    background: #161b22;
+    border: solid #30363d;
+    padding: 1 1;
+    margin: 0 1 1 1;
+    height: auto;
+    max-height: 14;
+    color: #c9d1d9;
+}
+
+.recs-panel {
+    background: #161b22;
+    border: solid #30363d;
+    padding: 1 1;
+    margin: 1 1;
+    height: auto;
+    max-height: 8;
+    color: #c9d1d9;
+}
+
+/* ═════════════════════════════════════════════════════
+   Disk Analyzer specific
+   ═════════════════════════════════════════════════════ */
+
+.top-dirs-panel {
+    background: #161b22;
+    border: solid #30363d;
+    padding: 1 1;
+    margin: 0 1;
+    height: auto;
+    max-height: 10;
+    color: #c9d1d9;
+}
+
+/* ═════════════════════════════════════════════════════
+   Scrollbars
+   ═════════════════════════════════════════════════════ */
+
 ScrollableContainer {
-    height: 1fr;
+    scrollbar-color: #30363d;
+    scrollbar-color-active: #58a6ff;
+    scrollbar-color-hover: #484f58;
+    scrollbar-size-vertical: 1;
 }
