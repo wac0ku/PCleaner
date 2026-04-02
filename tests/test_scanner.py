@@ -8,7 +8,8 @@ from pathlib import Path
 
 import pytest
 
-from pcleaner.core.scanner import CleanItem, Scanner, ScanResult, _fmt_size, _dir_size
+from pcleaner.core.scanner import CleanItem, Scanner, ScanResult, _dir_size
+from pcleaner.utils.format import fmt_size as _fmt_size
 from pcleaner.core.browsers import installed_browsers, get_browser_paths
 
 

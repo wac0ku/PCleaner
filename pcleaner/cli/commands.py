@@ -11,7 +11,7 @@ if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf-16"
 if sys.stderr.encoding and sys.stderr.encoding.lower() not in ("utf-8", "utf-16"):
     sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 from pathlib import Path
-from typing import Annotated, Optional
+from typing import Optional
 
 import typer
 from rich import box
@@ -22,7 +22,7 @@ from rich.prompt import Confirm
 from rich.table import Table
 from rich.text import Text
 
-from pcleaner import BANNER, APP_FULL_NAME, __version__
+from pcleaner import BANNER, APP_FULL_NAME, APP_TAGLINE, __version__
 
 console = Console()
 err_console = Console(stderr=True)
@@ -51,15 +51,9 @@ app.add_typer(disk_app,     name="disk")
 
 def _print_banner() -> None:
     console.print(f"[bold cyan]{BANNER}[/]")
-    console.print(f"[bold white]  {APP_FULL_NAME}[/]  [dim]v{__version__}[/]\n")
+    console.print(f"[bold white]  {APP_FULL_NAME}[/]  [dim]v{__version__}[/]")
+    console.print(f"  [green]{APP_TAGLINE}[/]\n")
 
-
-def _fmt_size(n: int) -> str:
-    for unit in ("B", "KB", "MB", "GB"):
-        if n < 1024:
-            return f"{n:.1f} {unit}"
-        n //= 1024
-    return f"{n:.1f} TB"
 
 
 # ---------------------------------------------------------------------------
@@ -97,6 +91,15 @@ def main_callback(
         console.print("    [cyan]pcleaner health[/]            System health report")
         console.print("    [cyan]pcleaner --tui[/]             Launch TUI interface")
         console.print("    [cyan]pcleaner --gui[/]             Launch GUI interface\n")
+        console.print(Panel(
+            f"[green]✓ All CCleaner Pro features — completely free[/]\n"
+            f"[green]✓ No ads, no nag screens, no telemetry[/]\n"
+            f"[green]✓ Open source — MIT license[/]\n"
+            f"[dim]  github.com/leongajtner/PCleaner[/]",
+            title="[bold cyan]Why PCleaner?[/]",
+            border_style="cyan",
+            expand=False,
+        ))
 
 
 @app.command()
@@ -169,7 +172,6 @@ def clean(
 
     # Clean phase
     cleaner = Cleaner(dry_run=dry_run)
-    cleaned_count = 0
 
     with Progress(
         SpinnerColumn(),
@@ -182,8 +184,6 @@ def clean(
         task = progress.add_task("Cleaning...", total=result.item_count)
 
         def on_clean(item, current: int, total: int) -> None:
-            nonlocal cleaned_count
-            cleaned_count = current
             progress.update(task, description=f"Cleaning {item.subcategory}...", completed=current, total=total)
 
         cleaner.set_progress_callback(on_clean)
@@ -276,6 +276,7 @@ def wipe(
         console.print(f"[red]Invalid input:[/] {e}")
         raise typer.Exit(1)
 
+    _print_banner()
     standard = WIPE_STANDARDS.get(passes, f"{passes}-pass")
     console.print(f"[bold]Wipe standard:[/] {standard}")
 
@@ -315,6 +316,7 @@ def duplicates(
     """Find duplicate files by content (MD5 hash)."""
     from pcleaner.tools.duplicates import DuplicateFinder
 
+    _print_banner()
     finder = DuplicateFinder(min_size=min_size)
 
     with Progress(SpinnerColumn(), TextColumn("{task.description}"), console=console, transient=True) as p:
@@ -365,6 +367,7 @@ def registry_scan() -> None:
     """Scan the registry for issues."""
     from pcleaner.core.registry import RegistryScanner
 
+    _print_banner()
     console.print("[bold]Scanning registry...[/]\n")
     scanner = RegistryScanner()
 
@@ -400,6 +403,7 @@ def registry_clean(
     """Scan and clean registry issues (auto-backup first)."""
     from pcleaner.core.registry import RegistryScanner, RegistryCleaner
 
+    _print_banner()
     console.print("[bold]Scanning registry...[/]")
     scanner = RegistryScanner()
     with console.status("Scanning..."):
@@ -437,6 +441,7 @@ def startup_list() -> None:
     """List all startup programs."""
     from pcleaner.tools.startup import StartupManager
 
+    _print_banner()
     with console.status("Reading startup entries..."):
         mgr = StartupManager()
         entries = mgr.list_entries()
@@ -462,6 +467,7 @@ def startup_list() -> None:
 @startup_app.command("disable")
 def startup_disable(name: str = typer.Argument(..., help="Name of the startup entry to disable.")) -> None:
     """Disable a startup program."""
+    _print_banner()
     from pcleaner.tools.startup import StartupManager
     mgr = StartupManager()
     entries = {e.name: e for e in mgr.list_entries()}
@@ -475,6 +481,7 @@ def startup_disable(name: str = typer.Argument(..., help="Name of the startup en
 @startup_app.command("enable")
 def startup_enable(name: str = typer.Argument(..., help="Name of the startup entry to enable.")) -> None:
     """Enable a startup program."""
+    _print_banner()
     from pcleaner.tools.startup import StartupManager
     mgr = StartupManager()
     entries = {e.name: e for e in mgr.list_entries()}
@@ -497,6 +504,7 @@ def disk_analyze(
     """Analyze disk usage by file type."""
     from pcleaner.tools.disk_analyzer import DiskAnalyzer
 
+    _print_banner()
     from pcleaner.utils.security import safe_path, PathTraversalError
     try:
         path = safe_path(path)

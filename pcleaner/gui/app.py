@@ -10,8 +10,9 @@ from typing import Callable
 
 import customtkinter as ctk
 
-from pcleaner import APP_FULL_NAME, __version__
+from pcleaner import APP_FULL_NAME, APP_TAGLINE, __version__
 from pcleaner.utils.config import cfg
+from pcleaner.utils.format import fmt_size
 
 # ── Theme ──────────────────────────────────────────────────────────────────
 ctk.set_appearance_mode(cfg.get("theme", "dark"))
@@ -39,13 +40,6 @@ NAV_ITEMS = [
     ("Settings",    "󰒓", "settings"),
 ]
 
-
-def _fmt(n: int) -> str:
-    for unit in ("B", "KB", "MB", "GB"):
-        if n < 1024:
-            return f"{n:.1f} {unit}"
-        n //= 1024
-    return f"{n:.1f} TB"
 
 
 # ── Base frame helper ───────────────────────────────────────────────────────
@@ -212,7 +206,7 @@ class CleanerView(BaseView):
 
     def _update_total(self):
         total = sum(item.size for var, item in self._vars if var.get())
-        self._total_lbl.configure(text=f"Selected: {_fmt(total)}")
+        self._total_lbl.configure(text=f"Selected: {fmt_size(total)}")
 
     def _sel_all(self):
         for var, _ in self._vars: var.set(True)
@@ -227,7 +221,7 @@ class CleanerView(BaseView):
         if not selected:
             messagebox.showinfo("PCleaner", "No items selected.")
             return
-        total_str = _fmt(sum(i.size for i in selected))
+        total_str = fmt_size(sum(i.size for i in selected))
         if not messagebox.askyesno("Confirm Clean",
                                    f"Delete {len(selected)} items ({total_str})?\n\nThis cannot be undone."):
             return
@@ -634,7 +628,7 @@ class DuplicatesView(BaseView):
     def _delete(self):
         if not self._groups:
             messagebox.showinfo("PCleaner", "Run a scan first."); return
-        wasted = _fmt(sum(g.wasted_bytes for g in self._groups))
+        wasted = fmt_size(sum(g.wasted_bytes for g in self._groups))
         if not messagebox.askyesno("Confirm Delete",
             f"Delete {sum(len(g.files)-1 for g in self._groups)} duplicate files?\n"
             f"Frees {wasted}. Keeps the newest copy."): return
@@ -888,7 +882,8 @@ class SettingsView(BaseView):
 
         info_card = self._card()
         ctk.CTkLabel(info_card, text=f"  {APP_FULL_NAME}  v{__version__}\n"
-                     "  Open-source, MIT license.\n  Settings auto-saved.",
+                     f"  {APP_TAGLINE}\n"
+                     "  Open-source, MIT license.  Settings auto-saved.",
                      font=ctk.CTkFont(size=12), text_color=TEXT_DIM, justify="left").pack(
             anchor="w", padx=8, pady=8)
 
@@ -949,15 +944,20 @@ class PCleaner(ctk.CTk):
         self._sidebar.grid_rowconfigure(20, weight=1)
 
         logo = ctk.CTkLabel(self._sidebar, text="PCleaner",
-                             font=ctk.CTkFont(size=20, weight="bold"),
+                             font=ctk.CTkFont(size=22, weight="bold"),
                              text_color=ACCENT)
-        logo.grid(row=0, column=0, padx=16, pady=(20, 4))
+        logo.grid(row=0, column=0, padx=16, pady=(20, 2))
         sub = ctk.CTkLabel(self._sidebar, text="the free Cleaner App",
-                           font=ctk.CTkFont(size=10), text_color=TEXT_DIM)
-        sub.grid(row=1, column=0, padx=16, pady=(0, 16))
+                           font=ctk.CTkFont(size=11, weight="bold"), text_color="#2ecc71")
+        sub.grid(row=1, column=0, padx=16, pady=(0, 4))
+        tagline = ctk.CTkLabel(self._sidebar,
+                                text="✓ CCleaner Pro — for free\n✓ Open Source  •  MIT",
+                                font=ctk.CTkFont(size=9), text_color=TEXT_DIM,
+                                justify="center")
+        tagline.grid(row=2, column=0, padx=12, pady=(0, 16))
 
         self._nav_buttons: dict[str, ctk.CTkButton] = {}
-        for i, (label, icon, key) in enumerate(NAV_ITEMS, start=2):
+        for i, (label, icon, key) in enumerate(NAV_ITEMS, start=3):
             btn = ctk.CTkButton(
                 self._sidebar, text=f"  {label}",
                 anchor="w", font=ctk.CTkFont(size=13),
@@ -972,7 +972,7 @@ class PCleaner(ctk.CTk):
         # Version at bottom
         ctk.CTkLabel(self._sidebar, text=f"v{__version__}",
                      font=ctk.CTkFont(size=10), text_color=TEXT_DIM).grid(
-            row=21, column=0, padx=16, pady=12)
+            row=22, column=0, padx=16, pady=12)
 
         # ── Content area ──
         self._content = ctk.CTkFrame(self, corner_radius=0, fg_color="transparent")

@@ -10,7 +10,8 @@ from typing import Callable
 from pcleaner.utils.logger import log
 from pcleaner.utils.security import safe_path, validate_drive_letter, validate_wiper_passes
 
-CHUNK = 65536  # 64 KB write chunks
+CHUNK = 65536        # 64 KB — used for pre-computed Gutmann pattern buffers
+WRITE_CHUNK = 4 * 1024 * 1024  # 4 MB — optimal write size for modern SSDs
 
 WIPE_STANDARDS: dict[int, str] = {
     1:  "Simple (1-pass random)",
@@ -66,9 +67,11 @@ def _overwrite_file(path: Path, passes: int, progress_cb: Callable | None = None
             while written < size:
                 remaining = size - written
                 if pattern is None:
-                    chunk = secrets.token_bytes(min(CHUNK, remaining))
+                    chunk = secrets.token_bytes(min(WRITE_CHUNK, remaining))
                 else:
-                    chunk = pattern[:min(len(pattern), remaining)]
+                    # Tile the 64 KB pattern to fill a 4 MB write buffer
+                    repeats = (min(WRITE_CHUNK, remaining) + len(pattern) - 1) // len(pattern)
+                    chunk = (pattern * repeats)[:min(WRITE_CHUNK, remaining)]
                 f.write(chunk)
                 written += len(chunk)
             f.flush()
@@ -156,7 +159,7 @@ class DriveWiper:
             import shutil
             _, _, free = shutil.disk_usage(drive)
             written = 0
-            block = CHUNK * 16  # 1 MB blocks
+            block = WRITE_CHUNK  # 4 MB blocks
             with fill_file.open("wb") as f:
                 while written < free - 10 * 1024 * 1024:  # Keep 10MB buffer
                     chunk_size = min(block, free - written - 10 * 1024 * 1024)

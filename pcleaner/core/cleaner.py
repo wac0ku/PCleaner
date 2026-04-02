@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import os
 import shutil
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -10,6 +9,7 @@ from typing import Callable
 
 from pcleaner.core.scanner import CleanItem, ScanResult
 from pcleaner.utils.elevation import is_admin
+from pcleaner.utils.format import fmt_size
 from pcleaner.utils.logger import log
 from pcleaner.utils.security import run_safe, run_powershell
 
@@ -30,12 +30,7 @@ class CleanResult:
 
     @property
     def freed_str(self) -> str:
-        n = self.freed_bytes
-        for unit in ("B", "KB", "MB", "GB"):
-            if n < 1024:
-                return f"{n:.1f} {unit}"
-            n /= 1024
-        return f"{n:.1f} TB"
+        return fmt_size(self.freed_bytes)
 
 
 # ---------------------------------------------------------------------------
@@ -133,15 +128,6 @@ class Cleaner:
                 result.cleaned.append(item)
                 continue
 
-            if item.subcategory == "DNS Cache":
-                _flush_dns()
-                result.cleaned.append(item)
-                continue
-
-            if item.subcategory == "Clipboard":
-                _clear_clipboard()
-                result.cleaned.append(item)
-                continue
 
             ok = _delete_path(item.path)
             if ok:

@@ -10,6 +10,7 @@ from typing import Callable, Iterator
 
 from pcleaner.core.browsers import get_browser_paths, installed_browsers
 from pcleaner.utils.config import cfg
+from pcleaner.utils.format import fmt_size
 from pcleaner.utils.logger import log
 from pcleaner.utils.security import run_safe
 
@@ -36,7 +37,7 @@ class CleanItem:
 
     @property
     def size_str(self) -> str:
-        return _fmt_size(self.size)
+        return fmt_size(self.size)
 
 
 @dataclass
@@ -50,7 +51,7 @@ class ScanResult:
 
     @property
     def total_size_str(self) -> str:
-        return _fmt_size(self.total_size)
+        return fmt_size(self.total_size)
 
     @property
     def item_count(self) -> int:
@@ -66,13 +67,6 @@ class ScanResult:
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
-
-def _fmt_size(n: int) -> str:
-    for unit in ("B", "KB", "MB", "GB", "TB"):
-        if n < 1024:
-            return f"{n:.1f} {unit}"
-        n /= 1024
-    return f"{n:.1f} PB"
 
 
 def _dir_size(path: Path) -> int:
