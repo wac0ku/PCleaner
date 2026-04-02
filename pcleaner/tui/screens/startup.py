@@ -5,7 +5,7 @@ from __future__ import annotations
 from textual import on, work
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, ScrollableContainer
-from textual.widgets import Button, DataTable, Input, Label, RichLog, Static
+from textual.widgets import Button, DataTable, Input, Label, ProgressBar, RichLog, Static
 
 
 class StartupScreen(Container):
@@ -33,6 +33,8 @@ class StartupScreen(Container):
             yield Button("⏸  Disable", id="btn-startup-disable", variant="warning")
             yield Button("▶  Enable", id="btn-startup-enable")
             yield Button("🗑  Delete", id="btn-startup-delete", variant="error")
+
+        yield ProgressBar(total=100, show_eta=False, id="startup-progress")
 
         with Horizontal(classes="status-row"):
             yield Label("", id="startup-status", classes="status-label")
@@ -123,9 +125,15 @@ class StartupScreen(Container):
     @work(thread=True)
     def _load_entries(self) -> None:
         from pcleaner.tools.startup import StartupManager
+        bar: ProgressBar = self.query_one("#startup-progress")
+        self.app.call_from_thread(bar.update, progress=0)
+        self.app.call_from_thread(
+            self.query_one("#startup-status", Label).update, "⏳ Loading startup entries…"
+        )
         entries = StartupManager().list_entries()
         self._entries = entries
         self._filtered = list(entries)
+        self.app.call_from_thread(bar.update, progress=100)
         self.app.call_from_thread(self._refresh_table)
         self.app.call_from_thread(
             self.query_one("#startup-status", Label).update,

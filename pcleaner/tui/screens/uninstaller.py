@@ -5,7 +5,7 @@ from __future__ import annotations
 from textual import on, work
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, ScrollableContainer
-from textual.widgets import Button, DataTable, Input, Label, RichLog, Static
+from textual.widgets import Button, DataTable, Input, Label, ProgressBar, RichLog, Static
 
 
 class UninstallerScreen(Container):
@@ -31,6 +31,8 @@ class UninstallerScreen(Container):
         with Horizontal(classes="action-bar"):
             yield Button("⟳  Refresh", id="btn-uninst-refresh", variant="primary")
             yield Button("🗑  Uninstall", id="btn-uninst-uninstall", variant="error")
+
+        yield ProgressBar(total=100, show_eta=False, id="uninst-progress")
 
         with Horizontal(classes="status-row"):
             yield Label("", id="uninst-status", classes="status-label")
@@ -100,12 +102,15 @@ class UninstallerScreen(Container):
     def _load_programs(self) -> None:
         from pcleaner.tools.uninstaller import Uninstaller
 
+        bar: ProgressBar = self.query_one("#uninst-progress")
+        self.app.call_from_thread(bar.update, progress=0)
         self.app.call_from_thread(
             self.query_one("#uninst-status", Label).update, "⏳ Loading programs…"
         )
         programs = Uninstaller().list_programs()
         self._programs = programs
         self._filtered = list(programs)
+        self.app.call_from_thread(bar.update, progress=100)
         self.app.call_from_thread(self._refresh_table)
         self.app.call_from_thread(
             self.query_one("#uninst-status", Label).update,

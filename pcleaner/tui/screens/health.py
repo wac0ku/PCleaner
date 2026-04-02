@@ -5,7 +5,7 @@ from __future__ import annotations
 from textual import on, work
 from textual.app import ComposeResult
 from textual.containers import Container, Horizontal, Vertical, ScrollableContainer
-from textual.widgets import Button, DataTable, Label, Static
+from textual.widgets import Button, DataTable, Label, ProgressBar, Static
 
 
 class HealthScreen(Container):
@@ -28,6 +28,8 @@ class HealthScreen(Container):
             yield Button("⟳  Refresh", id="btn-health-refresh", variant="primary")
             yield Button("📋  DNS Flush", id="btn-health-dns")
             yield Button("📎  Clear Clipboard", id="btn-health-clipboard")
+
+        yield ProgressBar(total=100, show_eta=False, id="health-progress")
 
         yield Static("", id="health-system-info", classes="health-card")
         yield Static("", id="health-drives", classes="health-card")
@@ -56,7 +58,10 @@ class HealthScreen(Container):
     @work(thread=True)
     def _load_health(self) -> None:
         from pcleaner.tools.health import HealthChecker
+        bar: ProgressBar = self.query_one("#health-progress")
+        self.app.call_from_thread(bar.update, progress=0)
         report = HealthChecker().check()
+        self.app.call_from_thread(bar.update, progress=30)
 
         # System info card
         def _status_color(pct: float) -> str:
@@ -85,6 +90,7 @@ class HealthScreen(Container):
             self.query_one("#health-system-info", Static).update,
             "\n".join(sys_lines),
         )
+        self.app.call_from_thread(bar.update, progress=55)
 
         # Drive cards
         drive_lines = ["  [bold cyan]💽  Disk Drives[/]\n"]
@@ -104,6 +110,8 @@ class HealthScreen(Container):
             "\n".join(drive_lines),
         )
 
+        self.app.call_from_thread(bar.update, progress=75)
+
         # Process table
         tbl: DataTable = self.query_one("#health-process-table")
         self.app.call_from_thread(tbl.clear)
@@ -117,6 +125,8 @@ class HealthScreen(Container):
                 p.status,
             )
 
+        self.app.call_from_thread(bar.update, progress=90)
+
         # Recommendations
         if report.recommendations:
             recs_text = "  [bold yellow]💡 Recommendations[/]\n\n" + "\n".join(
@@ -127,6 +137,7 @@ class HealthScreen(Container):
         self.app.call_from_thread(
             self.query_one("#health-recs", Static).update, recs_text
         )
+        self.app.call_from_thread(bar.update, progress=100)
 
     @work(thread=True)
     def _flush_dns(self) -> None:

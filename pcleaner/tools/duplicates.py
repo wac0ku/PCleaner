@@ -5,6 +5,7 @@ from __future__ import annotations
 import hashlib
 import os
 from collections import defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Callable
@@ -107,25 +108,35 @@ class DuplicateFinder:
         for root_path in paths:
             self._collect_files(root_path, size_groups, result)
 
-        # Phase 2: Hash files that share a size
+        # Phase 2: Hash files that share a size (parallel)
         candidates = {sz: files for sz, files in size_groups.items() if len(files) > 1}
-        total_candidates = sum(len(f) for f in candidates.values())
+        all_candidates: list[tuple[Path, int]] = [
+            (fpath, sz) for sz, files in candidates.items() for fpath in files
+        ]
+        total_candidates = len(all_candidates)
         hashed = 0
+        hash_groups: dict[str, list[tuple[Path, int]]] = defaultdict(list)
 
-        hash_groups: dict[str, list[Path]] = defaultdict(list)
-        for size, files in candidates.items():
-            for fpath in files:
-                h = _hash_file(fpath)
+        workers = min(os.cpu_count() or 4, 8)
+        with ThreadPoolExecutor(max_workers=workers) as pool:
+            future_to_info = {
+                pool.submit(_hash_file, fpath): (fpath, sz)
+                for fpath, sz in all_candidates
+            }
+            for future in as_completed(future_to_info):
+                fpath, sz = future_to_info[future]
+                h = future.result()
                 if h:
-                    hash_groups[h].append(fpath)
+                    hash_groups[h].append((fpath, sz))
                 hashed += 1
                 if self._progress_cb and hashed % 50 == 0:
                     self._progress_cb("Hashing files", hashed, total_candidates)
 
         # Phase 3: Build duplicate groups
-        for h, files in hash_groups.items():
-            if len(files) > 1:
-                size = files[0].stat().st_size if files[0].exists() else 0
+        for h, entries in hash_groups.items():
+            if len(entries) > 1:
+                files = [e[0] for e in entries]
+                size = entries[0][1]
                 result.groups.append(DuplicateGroup(hash=h, size=size, files=files))
 
         result.groups.sort(key=lambda g: g.wasted_bytes, reverse=True)
